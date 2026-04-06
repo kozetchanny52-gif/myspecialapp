@@ -1,19 +1,24 @@
-
+from PIL import Image,ImageTk
 from tkinter import *
 from tkinter import ttk
-
+import customtkinter as ctk
 from PIL import Image, ImageTk
+import sounddevice as sd
+import soundfile as sf
+import numpy as np
+from itertools import cycle
 
 win=Tk()
 win.geometry("600x600+450+90")
 win.config(bg="#FFFA00")
 
-logo=Image.open("KOTSHOP_logo.png")
+
+logo=Image.open("updated_logo.png")
 logo=logo.resize((280,280))
 Logo=ImageTk.PhotoImage(logo)
 
 logo2=Image.open("KOTSHOP_logo.png")
-logo2=logo.resize((120,63))
+logo2=logo2.resize((120,63))
 Logo2=ImageTk.PhotoImage(logo2)
 
 logo1=Image.open("KOTSHOP_logo.png")
@@ -72,39 +77,98 @@ columns=("A","B")
 
 Log=Label(win,image=Logo,bg="#FFFA00")
 Log.place(relx=0.5,rely=0.5,anchor="center")
+hist_frame=None
 info_frame=None
 loc_frame=None
 item_frame=None
 current_language="English"
+veg_btn=None
+an_btn=None
+cereal_btn=None
+fruit_btn=None
+season_btn=None
+drink_btn=None
 tr_frame=None
 text_reader=None
 tr=None
 R=[]
 BTN=None
+colors_toggle=["#1EFF00","#FF7300","#FF0000"]
+
+
+def click_sound():
+    sr = 44600
+
+    # --- First impact (sharp) ---
+    t1 = np.linspace(0, 0.012, int(sr * 0.012), False)
+    noise1 = np.random.randn(len(t1))
+    thump1 = np.sin(2 * np.pi * 250 * t1)
+    click1 = (0.8 * noise1 + 0.2 * thump1) * np.exp(-90 * t1)
+
+    # --- Tiny gap ---
+    gap = np.zeros(int(sr * 0.003))
+
+    # --- Second lighter impact (bounce) ---
+    t2 = np.linspace(0, 0.015, int(sr * 0.015), False)
+    noise2 = np.random.randn(len(t2))
+    thump2 = np.sin(2 * np.pi * 180 * t2)
+    click2 = (0.6 * noise2 + 0.4 * thump2) * np.exp(-70 * t2)
+
+    # Combine
+    sound = np.concatenate([click1, gap, click2])
+
+    # Normalize & soften
+    sound = sound / np.max(np.abs(sound)) * 5
+
+    sd.play(sound, sr)
+
+
 def set_language(lang):
     print("Selected language:", lang)
 Tree_item={"English":{"columns":["Animal","Vegetables"],"items":[("Beef","Tomatoes"),("Steak","Onions"),("Chicken","Carrots"),("Fish","Cabbage"),("Pork","Spinach"),("Cereals","Seasonings"),("Rice","Salt"),("Maize flour","Cooking Oil"),("Pasta","Black pepper"),("Sorghum","Maggi cubes"),("Oats","Vinegar"),("Fruits","Drinks"),("Banana","Water"),("Apple","Soda"),("Mango","Juice"),("Orange","Milk"),("Pineapple","Chocolate Drink")]},
            "French":{"columns":["Animal","Légumineuses"],"items":[("Boeuf","Tomates"),("Steak","Onions"),("Poulet","Carrotes"),("Poisson","Chou"),("Porc","Epinard"),("Céréales", "Assaisonnements"), ("Riz", "Sel"), ("Farine de maïs", "Huile de cuisson"), ("Pâtes", "Poivre noir"), ("Sorgho", "Cubes Maggi"), ("Avoine", "Vinaigre"),("Fruits", "Boissons"), ("Banane", "Eau"), ("Pomme", "Soda"), ("Mangue", "Jus"), ("Orange", "Lait"), ("Ananas", "Boisson au chocolat")]}}
 info_switch_language={"English":"ABOUT","French":"KOTSHOP-FRENCH-DESCRIPTION"}
 def intro_win():
-    global R,BTN
+    global R,BTN,colors_toggle
     win.withdraw()
     introwin=Toplevel(win)
     introwin.geometry("710x600+450+90")
+   
     widgets_updates={"English":{"ITEMS":"ITEMS","LOC":"LOCATION","HIST":"HISTORY","AB":"ABOUT","LANGUAGE":"LANGUAGES","PUR":"PURCHASE","REG":"Register your name","SL":"Connecting you to simple\n local food\n in the quickest way possible"},"French":{"ITEMS":"ARTICLES","LOC":"PLACE","HIST":"HISTORIQUE","AB":"PROPOS","LANGUAGE":"LANGUES","PUR":"COMMENCER","REG":"Enregistrer votre nom","SL":"Vous connectez à une nourriture \n locale simple\n de la manière la plus rapide possible"}}
     for _,s in widgets_updates.items():
         for j,_ in s.items():
             R.append(j)
-
     def update_text():
-        global current_language,BTN
+        global current_language,BTN,veg_btn,an_btn,fruit_btn,cereal_btn,season_btn,fruit_btn
         BTN=list((items_btn,location_btn,history_btn,guidline_btn,language_btn,purchase,Register_text,main_frame_lab))
         for key,B in zip(R,BTN):
             B.config(text=widgets_updates[current_language][key])
-    def toggle_items():
 
+   
+    def switch_language_french():
+        global current_language
+        current_language="French"
+        click_sound()
+        update_text()
+        if item_frame is not None:
+            tree_change_language()
+        elif info_frame is not None:
+            info_switch()
+
+    def switch_language_english():
+        global current_language
+        current_language="English"
+        click_sound()
+        update_text()
+        if item_frame is not None:
+            tree_change_language()
+        elif info_frame is not None:
+            info_switch()
+   
+    def toggle_items():
+        click_sound()
         # If already visible → remove it
-        global info_frame, loc_frame, item_frame, columns,tr,tr_frame
+        global info_frame, loc_frame, item_frame, columns,tr,tr_frame,hist_frame
 
         if item_frame and item_frame.winfo_exists():
             item_frame.destroy()
@@ -116,6 +180,10 @@ def intro_win():
 
         elif info_frame and info_frame.winfo_exists():
             info_frame.destroy()
+            info_frame=None
+        elif hist_frame and hist_frame.winfo_exists():
+            hist_frame.destroy()
+            hist_frame = None
 
         item_frame = Frame(introwin, bg="#FFFA00", width=442, height=520, relief="solid")
         vscrll=Scrollbar(item_frame,orient="vertical")
@@ -175,28 +243,12 @@ def intro_win():
                 tr.insert("", "end", values=init_row, tags=("highlight2",))
             else:
                 tr.insert("", "end", values=init_row, tags=("highlight",))
-    def switch_language_french():
-        global current_language
-        current_language="French"
-        update_text()
-        if item_frame is not None:
-            tree_change_language()
-        elif info_frame is not None:
-            info_switch()
 
-
-    def switch_language_english():
-        global current_language
-        current_language="English"
-        update_text()
-        if item_frame is not None:
-            tree_change_language()
-        elif info_frame is not None:
-            info_switch()
-
+    
     def toggle_info():
-        global info_frame,loc_frame,item_frame,text_reader
+        global info_frame,loc_frame,item_frame,text_reader,hist_frame
         # If already visible → remove it
+        click_sound()
         if info_frame and info_frame.winfo_exists():
             info_frame.destroy()
             info_frame = None
@@ -207,6 +259,9 @@ def intro_win():
         elif item_frame and item_frame.winfo_exists():
             item_frame.destroy()
             item_frame = None
+        elif hist_frame and hist_frame.winfo_exists():
+            hist_frame.destroy()
+            hist_frame = None
 
 
             # Create info box
@@ -217,11 +272,11 @@ def intro_win():
         y = guidline_btn.winfo_y()
         info_frame.place(x=x, y=y)
 
-        horizontal_scrollbar = Scrollbar(info_frame, orient="horizontal")
+        horizontal_scrollbar =Scrollbar(info_frame,width=13,orient="horizontal",bg="green")
         horizontal_scrollbar.pack(side="bottom", fill="x")
 
 
-        vertical_scrollbar = Scrollbar(info_frame, orient="vertical")
+        vertical_scrollbar = Scrollbar(info_frame,width=13,orient="vertical")
         vertical_scrollbar.pack(side="left", fill="y")
 
         canva_about=Canvas(info_frame,bg="#FFFA00",height=70)
@@ -233,8 +288,8 @@ def intro_win():
         text_about=Text(info_frame,width=50,height=20,background="#005E05",wrap="none",xscrollcommand=horizontal_scrollbar,yscrollcommand=vertical_scrollbar)
         text_about.pack()
         text_reader=text_about
-        horizontal_scrollbar.config(command=text_about.xview)
-        vertical_scrollbar.config(command=text_about.yview)
+        horizontal_scrollbar.configure(command=text_about.xview)
+        vertical_scrollbar.configure(command=text_about.yview)
         if current_language=="English":
             with open("ABOUT", "r", encoding="utf-8") as File:
                 content = File.read()
@@ -268,7 +323,8 @@ def intro_win():
                 text_about.config(state=DISABLED)
 
     def info_switch():
-        global current_language,text_reader,info_switch_language
+        global current_language,text_reader,info_switch_language,hist_frame
+        click_sound()
         text_reader.config(state=NORMAL)
         text_reader.delete("1.0",END)
         with open(f"{info_switch_language[current_language]}","r",encoding="utf-8") as File:
@@ -298,8 +354,8 @@ def intro_win():
                                   relief="raised")
             text_reader.config(state=DISABLED)
     def toggle_loc():
-        global info_frame,loc_frame,item_frame
-
+        global info_frame,loc_frame,item_frame,colors_toggle,hist_frame
+        click_sound()
         # If already visible → remove it
         if loc_frame and loc_frame.winfo_exists():
             loc_frame.destroy()
@@ -311,6 +367,9 @@ def intro_win():
         elif item_frame and item_frame.winfo_exists():
             item_frame.destroy()
             item_frame = None
+        elif hist_frame and hist_frame.winfo_exists():
+            hist_frame.destroy()
+            hist_frame = None
 
         # Create info box
         loc_frame = Frame(introwin, bg="#FFFA00",width=360,height=400, relief="solid")
@@ -323,13 +382,53 @@ def intro_win():
         y = guidline_btn.winfo_y()
         loc_frame.place(x=x, y=y)
 
+    def toggle_hist():
+      global info_frame,loc_frame,item_frame,colors_toggle,hist_frame
+      click_sound()
+      # If already visible → remove it
+      if hist_frame and hist_frame.winfo_exists():
+        hist_frame.destroy()
+        hist_frame = None
+        return
+      elif info_frame and info_frame.winfo_exists():
+        info_frame.destroy()
+        info_frame = None
+      elif item_frame and item_frame.winfo_exists():
+        item_frame.destroy()
+        item_frame = None
+      elif loc_frame and loc_frame.winfo_exists():
+            loc_frame.destroy()
+            loc_frame = None
+    
+
+        # Create info box
+      hist_frame = Frame(introwin, bg="#FFFA00",width=360,height=400, relief="solid")
+      hist_fame_backgr=Label(loc_frame,image=Location_backgr)
+      hist_fame_backgr.place(x=0,y=0,relwidth=1,relheight=1)
+
+        #loc_image=Label(loc_frame,image=)
+        # Position it beside the button
+      x = location_btn.winfo_x() - guidline_btn.winfo_width()-190
+      y = guidline_btn.winfo_y()
+      hist_frame.place(x=x, y=y)
     super_backg=Label(introwin,image=intro_backgr)
     super_backg.place(x=0,y=0,relwidth=1,relheight=1)
 
-    flyer=Label(introwin,font=("Segoe UI Variable Text Semibold",15),fg="#3BFF00",bg="#FF7100",image=Logo1,borderwidth=5,compound="bottom",anchor="center")
+    flyer=Label(introwin,font=("Segoe UI Variable Text Semibold",15),fg="#3BFF00",bg="#FF7300",image=Logo1,borderwidth=5,compound="bottom",anchor="center")
     flyer.pack(pady=60)
-
-    guidline_btn=Button(introwin,text=f"ABOUT",bg="#FFD400",font=("Segoe UI Black",10),fg="#2A6000",width=17,relief="raised",borderwidth=10,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_info)
+    def color1(): 
+      flyer.config(bg=colors_toggle[0])
+      introwin.after(500,color2)
+    def color2(): 
+      flyer.config(bg=colors_toggle[1])
+      introwin.after(500,color3)
+    def color3(): 
+      flyer.config(bg=colors_toggle[2])
+      introwin.after(500,color1)    
+    color1()
+    color2()
+    color3()
+    guidline_btn=Button(introwin,text=f"ABOUT",bg="#FFD400",font=("Segoe UI Black",10),fg="#2A6000",borderwidth=10,width=17,relief="raised",activeforeground="#FFD400",activebackground="#2A6000",command=toggle_info)
     guidline_btn.place(x=19,y=35)
 
 
@@ -355,7 +454,7 @@ def intro_win():
     location_btn.place(x=530, y=100)
 
     history_btn = Button(introwin, text=f"HISTORY", bg="#FFD400", font=("Segoe UI Black", 10), fg="#2A6000", width=17,
-                          relief="raised", borderwidth=10,activeforeground="#FFD400",activebackground="#2A6000")
+                          relief="raised", borderwidth=10,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
     history_btn.place(x=530, y=165)
 
 
@@ -367,20 +466,18 @@ def intro_win():
     Register_text.place(relwidth=1,relheight=1)
     canva_frame=Frame(canva)
 
-    canva.create_window((78,35),window=canva_frame,width=122,height=20)
-    register_name=Entry(canva_frame,font=("Segoe UI Black", 8),fg="#2A6000",highlightthickness=2,highlightcolor="#2A6000")
+    canva.create_window((78,40),window=canva_frame,width=122,height=20)
+    register_name=Entry(canva_frame,font=("Segoe UI Black", 10),fg="#2A6000",highlightthickness=2,highlightcolor="#2A6000",highlightbackground="#2A6000")
     register_name.place(relwidth=1,relheight=1)
-
-    validate_Btn=Button(canva,text="Ok",font=("Segoe UI Black", 10),activeforeground="#FFD400",activebackground="#2A6000",bg="#FFD400",fg="#2A6000")
-
-    canva.create_window((78, 59), window=validate_Btn, width=52, height=20)
 
     main_frame=Frame(introwin,bg="pink",width=405,height=290)
     main_frame.pack(pady=33)
     slogan="Connecting you to simple\n local food\n in the quickest way possible"
       
+     
     def purchase_win():
-      global R,BTN
+      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn
+      click_sound()
       introwin.withdraw()
       Purchase_win=Toplevel(win)
       Purchase_win.geometry("710x600+450+90")
@@ -388,6 +485,7 @@ def intro_win():
       Purchase_win_backg.place(x=0,y=0,relwidth=1,relheight=1)
       
       def back_main_win():
+        click_sound()
         Purchase_win.withdraw()
         introwin.deiconify()
       canva_about2=Canvas(Purchase_win,bg="#FFF902",height=70)
@@ -397,7 +495,7 @@ def intro_win():
       left_arrow_back.place(relheight=1,relwidth=1)
       canva_about2.create_window((48,35),window=left_arrow_back,width=50,height=50)
 
-      can=Canvas(Purchase_win,width=200,height=120,highlightthickness=0,bg="#FFF902",borderwidth=5,relief="groove")
+      can=Canvas(Purchase_win,width=200,height=120,highlightthickness=0,bg="#FFF902",borderwidth=6,relief="groove")
       can.pack(pady=12)
       oval=can.create_oval(7, 10, 200, 120, fill="#005E05", outline="green",width=7)
 
@@ -409,30 +507,87 @@ def intro_win():
       main_frame_im=Label(main_frame1,image=main_frame_back1)
       main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
       
-      vegetables_btn=Button(main_frame1,width=125,height=125,image=vegetables,background="#005E05",foreground="yellow",text="Vegetables",font=("Ink Free",15,"bold"),compound="top",activebackground="green",activeforeground="yellow")
+   
+      vegetables_btn=Button(main_frame1,width=125,height=125,image=vegetables,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       vegetables_btn.place(x=20,y=20)
-
-      animal_btn=Button(main_frame1,width=125,height=125,image=meats,background="#005E05",foreground="yellow",text="Meats",font=("Ink Free",15,"bold"),compound="top",activebackground="green",activeforeground="yellow")
+      
+      animal_btn=Button(main_frame1,width=125,height=125,image=meats,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
       animal_btn.place(x=190,y=20)
       
-      cereals_btn=Button(main_frame1,width=125,height=125,image=cereals,background="#005E05",foreground="yellow",text="Cereals",font=("Ink Free",15,"bold"),compound="top",activebackground="green",activeforeground="yellow")
+      cereals_btn=Button(main_frame1,width=125,height=125,image=cereals,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       cereals_btn.place(x=360,y=20)
 
-      fruits_btn=Button(main_frame1,width=125,height=125,image=fruits,background="#005E05",foreground="yellow",text="Fruits",font=("Ink Free",15,"bold"),compound="top",activebackground="green",activeforeground="yellow")
+      fruits_btn=Button(main_frame1,width=125,height=125,image=fruits,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       fruits_btn.place(x=20,y=163)
 
-      seasons_btn=Button(main_frame1,width=125,height=125,image=seasonings,background="#005E05",foreground="yellow",text="Seasonings",font=("Ink Free",15,"bold"),compound="top",activebackground="green",activeforeground="yellow")
+      seasons_btn=Button(main_frame1,width=125,height=125,image=seasonings,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       seasons_btn.place(x=190,y=163)
       
-      drinks_btn=Button(main_frame1,width=125,height=125,image=drinks,background="#005E05",foreground="yellow",text="Drinks",font=("Ink Free",15,"bold"),compound="top",activebackground="green",activeforeground="yellow")
+      drinks_btn=Button(main_frame1,width=125,height=125,image=drinks,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       drinks_btn.place(x=360,y=163)
+
+      toggle_button_colors=list((vegetables_btn,animal_btn,cereals_btn,fruits_btn,seasons_btn,drinks_btn))
+      
+      def change_button_colors_1():
+        can.config(bg="yellow")
+        oval=can.create_oval(7, 10, 200, 120, fill="#005E05", outline="green",width=7)
+        text=can.create_text(110,68,text=f"CaTeGoRiEs",font=("Ink Free",20,"bold"),fill="yellow")
+        for k1 in toggle_button_colors:
+            k1.config(bg="#005E05")
+            k1.config(fg="yellow")
+        Purchase_win.after(400,change_button_colors_2)
+      def change_button_colors_2():
+        can.config(bg="red")
+        oval=can.create_oval(7, 10, 200, 120, fill=colors_toggle[0], outline="green",width=7)
+        text=can.create_text(110,68,text=f"CaTeGoRiEs",font=("Ink Free",20,"bold"),fill=colors_toggle[1])
+        for k2 in toggle_button_colors:
+            k2.config(bg="red")  
+        Purchase_win.after(400,change_button_colors_1)
+      change_button_colors_1()
+      change_button_colors_2()
+          
+    
+      if current_language=="English":
+        vegetables_btn.config(text="Vegetables")
+        animal_btn.config(text="Animal")
+        cereals_btn.config(text="Cereals")
+        fruits_btn.config(text="Fruits")
+        seasons_btn.config(text="Seasonings")
+        drinks_btn.config(text="Drinks")
+      else:
+        vegetables_btn.config(text="Légumineuses")
+        animal_btn.config(text="Animal")
+        cereals_btn.config(text="Cereals")
+        fruits_btn.config(text="Fruits")
+        seasons_btn.config(text="Saisonnements")
+        drinks_btn.config(text="Boissons")
+   
+    def test_purchase_win():
+        person_name=register_name.get().strip()
+        click_sound()
+        if not (person_name and all(cha.isalpha() or cha==" "  for cha in person_name)):
+          register_name.config(highlightbackground="red")
+          register_name.config(highlightcolor="red")
+          register_name.config(fg="red")
+          warning= "INVALID!" 
+          register_name.delete(0,END)
+          register_name.insert(END,warning)
+          def highlight_bg_change():
+            register_name.config(highlightbackground="#2A6000")
+            register_name.config(highlightcolor="#2A6000")
+            register_name.config(fg="#2A6000")
+            register_name.delete(0,END)
+          introwin.after(700,highlight_bg_change)
+        else:
+            register_name.config(state="readonly")
+            purchase_win()
 
     main_frame_im=Label(main_frame,image=main_frame_back)
     main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
     main_frame_lab=Label(main_frame,text=slogan,font=("Impact",10),borderwidth=9,width=65,bg="#FFD400",fg="#005E05")
     main_frame_lab.place(y=100,relx=0.5,rely=0.5,anchor="center")
 
-    purchase=Button(main_frame,text=f"PURCHASE",font=("Segoe Print",15,"bold"),relief="raised",borderwidth=4,bg="#FF0800",fg="#FFD400",width=15,activebackground="#FF4F14",activeforeground="#FFD400",command=purchase_win)
+    purchase=Button(main_frame,text=f"PURCHASE",font=("Segoe Print",15,"bold"),relief="raised",borderwidth=4,bg="#FF0800",fg="#FFD400",width=15,activebackground="#FF4F14",activeforeground="#FFD400",command=test_purchase_win)
     purchase.place(relx=0.5,rely=0.5,anchor="center")
 
 win.after(3000,intro_win)
