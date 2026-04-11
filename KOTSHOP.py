@@ -16,7 +16,7 @@ win.config(bg="#FFFA00")
 logo=Image.open("updated_logo.png")
 logo=logo.resize((280,280))
 Logo=ImageTk.PhotoImage(logo)
-
+pur_win=None 
 logo2=Image.open("KOTSHOP_logo.png")
 logo2=logo2.resize((120,63))
 Logo2=ImageTk.PhotoImage(logo2)
@@ -69,10 +69,18 @@ drinks=Image.open("drinks.png")
 drinks=drinks.resize((127,105))
 drinks=ImageTk.PhotoImage(drinks)
 
-Vegetables=["Tomatoes","Onions","Carrots","Cabbage","Spinach","Eggplant"]
-Cereals=["Rice","Maize flour","Wheat Flour","Sorghum","Pasta","Oats"]
-animal_products=["Beef","Steak","Chicken","Fish","Pork"]
-Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
+animal_backgr=Image.open("meats.jpg")
+animal_backgr=animal_backgr.resize((710,600))
+animal_backgr=ImageTk.PhotoImage(animal_backgr)
+
+frame_animal_backgr=Image.open("animalback.png")
+frame_animal_backgr=frame_animal_backgr.resize((520,400))
+frame_animal_backgr=ImageTk.PhotoImage(frame_animal_backgr)
+
+info_pic=Image.open("info.jpg")
+info_pic=info_pic.resize((50,50))
+info_pic=ImageTk.PhotoImage(info_pic)
+
 columns=("A","B")
 
 Log=Label(win,image=Logo,bg="#FFFA00")
@@ -473,16 +481,16 @@ def intro_win():
     main_frame=Frame(introwin,bg="pink",width=405,height=290)
     main_frame.pack(pady=33)
     slogan="Connecting you to simple\n local food\n in the quickest way possible"
-      
-     
+          
     def purchase_win():
-      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn
+      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn,pur_win
       click_sound()
       introwin.withdraw()
       Purchase_win=Toplevel(win)
       Purchase_win.geometry("710x600+450+90")
       Purchase_win_backg=Label(Purchase_win,image=intro_backgr)
       Purchase_win_backg.place(x=0,y=0,relwidth=1,relheight=1)
+      pur_win=Purchase_win
       
       def back_main_win():
         click_sound()
@@ -507,13 +515,12 @@ def intro_win():
       main_frame_im=Label(main_frame1,image=main_frame_back1)
       main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
       
-   
       vegetables_btn=Button(main_frame1,width=125,height=125,image=vegetables,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       vegetables_btn.place(x=20,y=20)
       
-      animal_btn=Button(main_frame1,width=125,height=125,image=meats,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
+      animal_btn=Button(main_frame1,command=animal_win,width=125,height=125,image=meats,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
       animal_btn.place(x=190,y=20)
-      
+       
       cereals_btn=Button(main_frame1,width=125,height=125,image=cereals,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       cereals_btn.place(x=360,y=20)
 
@@ -525,7 +532,6 @@ def intro_win():
       
       drinks_btn=Button(main_frame1,width=125,height=125,image=drinks,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       drinks_btn.place(x=360,y=163)
-
       toggle_button_colors=list((vegetables_btn,animal_btn,cereals_btn,fruits_btn,seasons_btn,drinks_btn))
       
       def change_button_colors_1():
@@ -581,6 +587,59 @@ def intro_win():
         else:
             register_name.config(state="readonly")
             purchase_win()
+
+    def animal_win():
+      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn,pur_win
+      click_sound()
+      pur_win.withdraw()
+      Animal_win=Toplevel(pur_win)
+      Animal_win.geometry("710x600+450+90")
+      Animal_win_backg=Label(Animal_win,image=animal_backgr)
+      Animal_win_backg.place(x=0,y=10,relwidth=1,relheight=1)
+
+      def back_purchase_win():
+        click_sound()
+        Animal_win.withdraw()
+        pur_win.deiconify()
+      canva_about2=Canvas(Animal_win,bg="#FFF902",height=70)
+      canva_about2.pack(fill="both",side="top")
+      canva_about2.create_image(340, 38, image=Logo2)
+      left_arrow_back=Button(canva_about2,font=("Segoe UI Black", 8),anchor="center",image=Left_Arrow,bg="#FFF902",command=back_purchase_win)
+      left_arrow_back.place(relheight=1,relwidth=1)
+      canva_about2.create_window((48,35),window=left_arrow_back,width=50,height=50)
+        
+      Vegetables=["Tomatoes","Onions","Carrots","Cabbage","Spinach"]
+      Cereals=["Rice","Maize flour","Sorghum","Pasta","Oats"]
+      animal_products=["Beef","Steak","Chicken","Fish","Pork"]
+      Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
+      
+      info_hover_label=Label(Animal_win,image=info_pic,width=50,height=50)
+      info_hover_label.pack(pady=10)
+
+      animal_frame=Frame(Animal_win,width=520,height=330)
+      animal_frame.pack(pady=20)
+
+      animal_back_pic=Label(animal_frame,image=frame_animal_backgr)
+      animal_back_pic.place(x=0,y=0,relheight=1,relwidth=1)
+      
+      beef_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # type: ignore
+      beef_fr.place(x=20,y=20)
+      
+      steak_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
+      steak_fr.place(x=190,y=115)
+      
+      chicken_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      chicken_fr.place(x=360,y=20)
+
+      fish_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      fish_fr.place(x=20,y=163)
+
+      pork_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      pork_fr.place(x=360,y=163)
+      
+      done_btn = Button(Animal_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
+                          relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
+      done_btn.place(relx=1,rely=1,anchor="se",x=-10,y=-16) 
 
     main_frame_im=Label(main_frame,image=main_frame_back)
     main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
