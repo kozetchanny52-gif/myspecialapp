@@ -70,18 +70,55 @@ drinks=drinks.resize((127,105))
 drinks=ImageTk.PhotoImage(drinks)
 
 animal_backgr=Image.open("meats.jpg")
-animal_backgr=animal_backgr.resize((710,600))
+animal_backgr=animal_backgr.resize((455,358))
 animal_backgr=ImageTk.PhotoImage(animal_backgr)
 
 frame_animal_backgr=Image.open("animalback.png")
-frame_animal_backgr=frame_animal_backgr.resize((520,400))
+frame_animal_backgr=frame_animal_backgr.resize((455,400))
 frame_animal_backgr=ImageTk.PhotoImage(frame_animal_backgr)
 
-info_pic=Image.open("info.jpg")
-info_pic=info_pic.resize((50,50))
-info_pic=ImageTk.PhotoImage(info_pic)
+veg_win_backg=Image.open("vegetables.png")
+veg_win_backg=veg_win_backg.resize((455,358))
+veg_win_backg=ImageTk.PhotoImage(veg_win_backg)
 
+info_pic=Image.open("info.jpg")
+info_pic=info_pic.resize((30,30))
+info_pic=ImageTk.PhotoImage(info_pic)
+onions_pic=Image.open("onions.jpg")
+onions_pic=onions_pic.resize((130,90))
+onions_pic=ImageTk.PhotoImage(onions_pic)
+
+carrot_pic=Image.open("carrots.jpg")
+carrot_pic=carrot_pic.resize((130,90))
+carrot_pic=ImageTk.PhotoImage(carrot_pic)
+
+beef_pic=Image.open("beef.png")
+beef_pic=beef_pic.resize((130,90))
+beef_pic=ImageTk.PhotoImage(beef_pic)
+
+steak_pic=Image.open("steak.jpg")
+steak_pic=steak_pic.resize((130,90))
+steak_pic=ImageTk.PhotoImage(steak_pic)
+
+chicken_pic=Image.open("chicken.jpg")
+chicken_pic=chicken_pic.resize((130,90))
+chicken_pic=ImageTk.PhotoImage(chicken_pic)
+
+pork_pic=Image.open("pork.jpeg")
+pork_pic=pork_pic.resize((130,90))
+pork_pic=ImageTk.PhotoImage(pork_pic)
+add_to_cart=Image.open("add_to_cart.png")
+add_to_cart=add_to_cart.resize((54,36))
+add_to_cart=ImageTk.PhotoImage(add_to_cart)
 columns=("A","B")
+
+tomatoes_pic=Image.open("tomatos.jpg")
+tomatoes_pic=tomatoes_pic.resize((130,90))
+tomatoes_pic=ImageTk.PhotoImage(tomatoes_pic)
+
+cabbage_pic=Image.open("cabbage.jpg")
+cabbage_pic=cabbage_pic.resize((130,90))
+cabbage_pic=ImageTk.PhotoImage(cabbage_pic)
 
 Log=Label(win,image=Logo,bg="#FFFA00")
 Log.place(relx=0.5,rely=0.5,anchor="center")
@@ -133,8 +170,8 @@ def click_sound():
 
 def set_language(lang):
     print("Selected language:", lang)
-Tree_item={"English":{"columns":["Animal","Vegetables"],"items":[("Beef","Tomatoes"),("Steak","Onions"),("Chicken","Carrots"),("Fish","Cabbage"),("Pork","Spinach"),("Cereals","Seasonings"),("Rice","Salt"),("Maize flour","Cooking Oil"),("Pasta","Black pepper"),("Sorghum","Maggi cubes"),("Oats","Vinegar"),("Fruits","Drinks"),("Banana","Water"),("Apple","Soda"),("Mango","Juice"),("Orange","Milk"),("Pineapple","Chocolate Drink")]},
-           "French":{"columns":["Animal","Légumineuses"],"items":[("Boeuf","Tomates"),("Steak","Onions"),("Poulet","Carrotes"),("Poisson","Chou"),("Porc","Epinard"),("Céréales", "Assaisonnements"), ("Riz", "Sel"), ("Farine de maïs", "Huile de cuisson"), ("Pâtes", "Poivre noir"), ("Sorgho", "Cubes Maggi"), ("Avoine", "Vinaigre"),("Fruits", "Boissons"), ("Banane", "Eau"), ("Pomme", "Soda"), ("Mangue", "Jus"), ("Orange", "Lait"), ("Ananas", "Boisson au chocolat")]}}
+Tree_item={"English":{"columns":["Animal","Vegetables"],"items":[("Beef","Tomatoes"),("Steak","Onions"),("Chicken","Carrots"),("Pork","Spinach"),("Cereals","Seasonings"),("Rice","Salt"),("Maize flour","Cooking Oil"),("Sorghum","Maggi cubes"),("Oats","Vinegar")]}#,("Fruits","Drinks"),("Banana","Water"),("Apple","Soda"),("Mango","Juice"),("Orange","Milk"),("Pineapple","Chocolate Drink")]},
+           ,"French":{"columns":["Animal","Légumineuses"],"items":[("Boeuf","Tomates"),("Steak","Onions"),("Poulet","Carrotes"),("Porc","Epinard"),("Céréales", "Assaisonnements"), ("Riz", "Sel"), ("Farine de maïs", "Huile de cuisson"), ("Sorgho", "Cubes Maggi"), ("Avoine", "Vinaigre")]}}#,("Fruits", "Boissons"), ("Banane", "Eau"), ("Pomme", "Soda"), ("Mangue", "Jus"), ("Orange", "Lait"), ("Ananas", "Boisson au chocolat")]}}
 info_switch_language={"English":"ABOUT","French":"KOTSHOP-FRENCH-DESCRIPTION"}
 def intro_win():
     global R,BTN,colors_toggle
@@ -515,24 +552,21 @@ def intro_win():
       main_frame_im=Label(main_frame1,image=main_frame_back1)
       main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
       
-      vegetables_btn=Button(main_frame1,width=125,height=125,image=vegetables,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      vegetables_btn=Button(main_frame1,command=veg_win,width=125,height=125,image=vegetables,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       vegetables_btn.place(x=20,y=20)
       
       animal_btn=Button(main_frame1,command=animal_win,width=125,height=125,image=meats,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
       animal_btn.place(x=190,y=20)
        
-      cereals_btn=Button(main_frame1,width=125,height=125,image=cereals,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      cereals_btn=Button(main_frame1,command=cereal_win,width=125,height=125,image=cereals,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       cereals_btn.place(x=360,y=20)
 
-      fruits_btn=Button(main_frame1,width=125,height=125,image=fruits,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
-      fruits_btn.place(x=20,y=163)
+    
 
       seasons_btn=Button(main_frame1,width=125,height=125,image=seasonings,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       seasons_btn.place(x=190,y=163)
       
-      drinks_btn=Button(main_frame1,width=125,height=125,image=drinks,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
-      drinks_btn.place(x=360,y=163)
-      toggle_button_colors=list((vegetables_btn,animal_btn,cereals_btn,fruits_btn,seasons_btn,drinks_btn))
+      toggle_button_colors=list((vegetables_btn,animal_btn,cereals_btn,seasons_btn))
       
       def change_button_colors_1():
         can.config(bg="yellow")
@@ -557,16 +591,12 @@ def intro_win():
         vegetables_btn.config(text="Vegetables")
         animal_btn.config(text="Animal")
         cereals_btn.config(text="Cereals")
-        fruits_btn.config(text="Fruits")
         seasons_btn.config(text="Seasonings")
-        drinks_btn.config(text="Drinks")
       else:
         vegetables_btn.config(text="Légumineuses")
         animal_btn.config(text="Animal")
         cereals_btn.config(text="Cereals")
-        fruits_btn.config(text="Fruits")
         seasons_btn.config(text="Saisonnements")
-        drinks_btn.config(text="Boissons")
    
     def test_purchase_win():
         person_name=register_name.get().strip()
@@ -594,7 +624,7 @@ def intro_win():
       pur_win.withdraw()
       Animal_win=Toplevel(pur_win)
       Animal_win.geometry("710x600+450+90")
-      Animal_win_backg=Label(Animal_win,image=animal_backgr)
+      Animal_win_backg=Label(Animal_win,image=intro_backgr)
       Animal_win_backg.place(x=0,y=10,relwidth=1,relheight=1)
 
       def back_purchase_win():
@@ -613,34 +643,192 @@ def intro_win():
       animal_products=["Beef","Steak","Chicken","Fish","Pork"]
       Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
       
-      info_hover_label=Label(Animal_win,image=info_pic,width=50,height=50)
-      info_hover_label.pack(pady=10)
+      animal_frame=Frame(Animal_win,width=455,height=358)
+      animal_frame.pack(pady=35)
 
-      animal_frame=Frame(Animal_win,width=520,height=330)
-      animal_frame.pack(pady=20)
-
-      animal_back_pic=Label(animal_frame,image=frame_animal_backgr)
+      animal_back_pic=Label(animal_frame,image=animal_backgr)
       animal_back_pic.place(x=0,y=0,relheight=1,relwidth=1)
       
-      beef_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # type: ignore
-      beef_fr.place(x=20,y=20)
-      
-      steak_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
-      steak_fr.place(x=190,y=115)
-      
-      chicken_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
-      chicken_fr.place(x=360,y=20)
+      beef_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # type: ignore
+      beef_fr.place(x=40,y=20)
 
-      fish_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
-      fish_fr.place(x=20,y=163)
+      beef_label=Label(beef_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      beef_label.pack(side="top",fill="both")
+      
+      beef_image=Label(beef_fr,image=beef_pic,width=128,height=85)
+      beef_image.pack()
 
-      pork_fr=Frame(animal_frame,width=130,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
-      pork_fr.place(x=360,y=163)
+      beef_button=Button(beef_fr,image=add_to_cart,height=30,background="yellow")
+      beef_button.pack(fill="both")
+      
+      steak_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
+      steak_fr.place(x=250,y=20)
+      
+      steak_label=Label(steak_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      steak_label.pack(side="top",fill="both")
+      
+      steak_image=Label(steak_fr,image=steak_pic,width=128,height=85)
+      steak_image.pack()
+
+      steak_button=Button(steak_fr,image=add_to_cart,height=30,background="yellow")
+      steak_button.pack(fill="both")
+      
+      chicken_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      chicken_fr.place(x=40,y=190)
+
+      chicken_label=Label(chicken_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      chicken_label.pack(side="top",fill="both")
+      
+      chicken_image=Label(chicken_fr,image=chicken_pic,width=128,height=85)
+      chicken_image.pack()
+
+      chicken_button=Button(chicken_fr,image=add_to_cart,height=30,background="yellow")
+      chicken_button.pack(fill="both")
+
+      pork_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      pork_fr.place(x=250,y=190)
+      
+      pork_label=Label(pork_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      pork_label.pack(side="top",fill="both")
+      
+      pork_image=Label(pork_fr,image=pork_pic,width=128,height=85)
+      pork_image.pack()
+
+      pork_button=Button(pork_fr,image=add_to_cart,height=30,background="yellow")
+      pork_button.pack(fill="both")
       
       done_btn = Button(Animal_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
                           relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
       done_btn.place(relx=1,rely=1,anchor="se",x=-10,y=-16) 
+    def veg_win():
+      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn,pur_win
+      click_sound()
+      pur_win.withdraw()
+      Veg_win=Toplevel(pur_win)
+      Veg_win.geometry("710x600+450+90")
+      Veg_win_backg=Label(Veg_win,image=intro_backgr)
+      Veg_win_backg.place(x=0,y=10,relwidth=1,relheight=1)
 
+      def back_purchase_win():
+        click_sound()
+        Veg_win.withdraw()
+        pur_win.deiconify()
+      canva_about2=Canvas(Veg_win,bg="#FFF902",height=70)
+      canva_about2.pack(fill="both",side="top")
+      canva_about2.create_image(340, 38, image=Logo2)
+      left_arrow_back=Button(canva_about2,font=("Segoe UI Black", 8),anchor="center",image=Left_Arrow,bg="#FFF902",command=back_purchase_win)
+      left_arrow_back.place(relheight=1,relwidth=1)
+      canva_about2.create_window((48,35),window=left_arrow_back,width=50,height=50)
+        
+      Vegetables=["Tomatoes","Onions","Carrots","Cabbage","Spinach"]
+      Cereals=["Rice","Maize flour","Sorghum","Pasta","Oats"]
+      animal_products=["Beef","Steak","Chicken","Fish","Pork"]
+      Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
+      
+      animal_frame1=Frame(Veg_win,width=455,height=358)
+      animal_frame1.pack(pady=35)
+
+      animal_back_pic=Label(animal_frame1,image=veg_win_backg)
+      animal_back_pic.place(x=0,y=0,relheight=1,relwidth=1)
+      
+      tomato_fr=Frame(animal_frame1,width=135,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # type: ignore
+      tomato_fr.place(x=40,y=20)
+      
+      tomatoes_label=Label(tomato_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      tomatoes_label.pack(side="top",fill="both")
+      
+      tomatoes_image=Label(tomato_fr,image=tomatoes_pic,width=128,height=85)
+      tomatoes_image.pack()
+
+      tomatoes_button=Button(tomato_fr,image=add_to_cart,height=30,background="yellow")
+      tomatoes_button.pack(fill="both")
+
+      onion_fr=Frame(animal_frame1,width=135,height=135,background="yellow")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
+      onion_fr.place(x=250,y=20)
+
+      onions_label=Label(onion_fr,background="yellow",text="Onions:\n5800BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      onions_label.pack(side="top",fill="both")
+      
+      onions_image=Label(onion_fr,image=onions_pic,width=128,height=85)
+      onions_image.pack()
+
+      onions_button=Button(onion_fr,image=add_to_cart,height=30,background="yellow")
+      onions_button.pack(fill="both")
+
+      carrot_fr=Frame(animal_frame1,width=135,height=130,background="#005E05")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      carrot_fr.place(x=40,y=190)
+
+      carrot_label=Label(carrot_fr,background="yellow",text="carrots:\n4200BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      carrot_label.pack(side="top",fill="both")
+      
+      carrot_image=Label(carrot_fr,image=carrot_pic,width=128,height=85)
+      carrot_image.pack()
+
+      carrot_button=Button(carrot_fr,image=add_to_cart,height=30,background="yellow")
+      carrot_button.pack(fill="both")
+
+      cabbage_fr=Frame(animal_frame1,width=135,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      cabbage_fr.place(x=250,y=190)
+
+      cabbage_label=Label(cabbage_fr,background="yellow",text="carrots:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      cabbage_label.pack(side="top",fill="both")
+      
+      cabbage_image=Label(cabbage_fr,image=cabbage_pic,width=128,height=85)
+      cabbage_image.pack()
+
+      cabbage_button=Button(cabbage_fr,image=add_to_cart,height=30,background="yellow")
+      cabbage_button.pack(fill="both")
+
+      
+      done_btn1= Button(Veg_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
+                          relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
+      done_btn1.place(relx=1,rely=1,anchor="se",x=-10,y=-16) 
+    def cereal_win():
+      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn,pur_win
+      click_sound()
+      pur_win.withdraw()
+      Cer_win=Toplevel(pur_win)
+      Cer_win.geometry("710x600+450+90")
+      Cer_win_backg=Label(Cer_win,image=animal_backgr)
+      Cer_win_backg.place(x=0,y=10,relwidth=1,relheight=1)
+
+      def back_purchase_win():
+        click_sound()
+        Cer_win.withdraw()
+        pur_win.deiconify()
+      canva_about2=Canvas(Cer_win,bg="#FFF902",height=70)
+      canva_about2.pack(fill="both",side="top")
+      canva_about2.create_image(340, 38, image=Logo2)
+      left_arrow_back=Button(canva_about2,font=("Segoe UI Black", 8),anchor="center",image=Left_Arrow,bg="#FFF902",command=back_purchase_win)
+      left_arrow_back.place(relheight=1,relwidth=1)
+      canva_about2.create_window((48,35),window=left_arrow_back,width=50,height=50)
+        
+      Vegetables=["Tomatoes","Onions","Carrots","Cabbage","Spinach"]
+      Cereals=["Rice","Maize flour","Sorghum","Pasta","Oats"]
+      animal_products=["Beef","Steak","Chicken","Fish","Pork"]
+      Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
+      
+      animal_frame1=Frame(Cer_win,width=455,height=350)
+      animal_frame1.pack(pady=35)
+
+      animal_back_pic=Label(animal_frame1,image=frame_animal_backgr)
+      animal_back_pic.place(x=0,y=0,relheight=1,relwidth=1)
+      
+      Rice_fr=Frame(animal_frame1,width=145,height=130,background="#025E56")#,activebackground="green",activeforeground="yellow") # type: ignore
+      Rice_fr.place(x=40,y=20)
+      
+      Maize_fr=Frame(animal_frame1,width=145,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
+      Maize_fr.place(x=250,y=20)
+      
+      avoine_fr=Frame(animal_frame1,width=145,height=130,background="#5E4D00")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      avoine_fr.place(x=40,y=190)
+
+      sorgho_fr=Frame(animal_frame1,width=145,height=130,background="#19005E")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      sorgho_fr.place(x=250,y=190)
+      
+      done_btn1= Button(Cer_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
+                          relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
+      done_btn1.place(relx=1,rely=1,anchor="se",x=-10,y=-16) 
     main_frame_im=Label(main_frame,image=main_frame_back)
     main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
     main_frame_lab=Label(main_frame,text=slogan,font=("Impact",10),borderwidth=9,width=65,bg="#FFD400",fg="#005E05")
