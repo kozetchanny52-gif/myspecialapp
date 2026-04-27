@@ -107,10 +107,14 @@ chicken_pic=ImageTk.PhotoImage(chicken_pic)
 pork_pic=Image.open("pork.jpeg")
 pork_pic=pork_pic.resize((130,90))
 pork_pic=ImageTk.PhotoImage(pork_pic)
+remove_from_cart=Image.open("remove_from_cart.png")
+remove_from_cart=remove_from_cart.resize((54,36))
+remove_from_cart=ImageTk.PhotoImage(remove_from_cart)
+columns=("A","B")
+
 add_to_cart=Image.open("add_to_cart.png")
 add_to_cart=add_to_cart.resize((54,36))
 add_to_cart=ImageTk.PhotoImage(add_to_cart)
-columns=("A","B")
 
 tomatoes_pic=Image.open("tomatos.jpg")
 tomatoes_pic=tomatoes_pic.resize((130,90))
@@ -120,6 +124,45 @@ cabbage_pic=Image.open("cabbage.jpg")
 cabbage_pic=cabbage_pic.resize((130,90))
 cabbage_pic=ImageTk.PhotoImage(cabbage_pic)
 
+cereal_backgr=Image.open("cereals.jpg")
+cereal_backgr=cereal_backgr.resize((455,358))
+cereal_backgr=ImageTk.PhotoImage(cereal_backgr)
+
+rice_backgr=Image.open("rice.jpg")
+rice_backgr=rice_backgr.resize((160,358))
+rice_backgr=ImageTk.PhotoImage(rice_backgr)
+
+maize_backgr=Image.open("maize.jpg")
+maize_backgr=maize_backgr.resize((200,358))
+maize_backgr=ImageTk.PhotoImage(maize_backgr)
+
+oats_backgr=Image.open("oats.jpg")
+oats_backgr=oats_backgr.resize((160,358))
+oats_backgr=ImageTk.PhotoImage(oats_backgr)
+
+sorghum_backgr=Image.open("sorghum.jpg")
+sorghum_backgr=sorghum_backgr.resize((160,358))
+sorghum_backgr=ImageTk.PhotoImage(sorghum_backgr)
+
+oil_backgr=Image.open("oil.jpg")
+oil_backgr=oil_backgr.resize((160,358))
+oil_backgr=ImageTk.PhotoImage(oil_backgr)
+
+maggi_backgr=Image.open("maggi.jpg")
+maggi_backgr=maggi_backgr.resize((160,358))
+maggi_backgr=ImageTk.PhotoImage(maggi_backgr)
+
+salt_backgr=Image.open("salt.jpg")
+salt_backgr=salt_backgr.resize((160,358))
+salt_backgr=ImageTk.PhotoImage(salt_backgr)
+
+vinegar_backgr=Image.open("vinegar.jpg")
+vinegar_backgr=vinegar_backgr.resize((160,358))
+vinegar_backgr=ImageTk.PhotoImage(vinegar_backgr)
+
+season_win_backg=Image.open("Seasonings.png")
+season_win_backg=season_win_backg.resize((455,358))
+season_win_backg=ImageTk.PhotoImage(season_win_backg)
 Log=Label(win,image=Logo,bg="#FFFA00")
 Log.place(relx=0.5,rely=0.5,anchor="center")
 hist_frame=None
@@ -138,8 +181,39 @@ text_reader=None
 tr=None
 R=[]
 BTN=None
+count_tomatoes=0
+tomato_total_price=0
+count_onions=0
+onion_total_price=0
+count_carrot=0
+carrot_total_price=0
+count_rice=0
+count_total_rice=0
 colors_toggle=["#1EFF00","#FF7300","#FF0000"]
-
+count_cabbage=0
+cabbage_total_price=0
+count_maize=0
+maize_total_price=0
+count_oats=0
+oats_total_price=0
+count_sorghum=0
+sorghum_total_price=0
+count_chicken=0
+chicken_total_price=0
+count_steak=0
+steak_total_price=0
+count_beef=0
+beef_total_price=0
+count_pork=0
+pork_total_price=0
+count_salt=0
+salt_total_price=0
+count_oil=0
+oil_total_price=0
+count_vinegar=0
+vinegar_total_price=0
+count_maggi=0
+maggi_total_price=0
 
 def click_sound():
     sr = 44600
@@ -561,9 +635,7 @@ def intro_win():
       cereals_btn=Button(main_frame1,command=cereal_win,width=125,height=125,image=cereals,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       cereals_btn.place(x=360,y=20)
 
-    
-
-      seasons_btn=Button(main_frame1,width=125,height=125,image=seasonings,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      seasons_btn=Button(main_frame1,command=seasons_win,width=125,height=125,image=seasonings,background="#005E05",foreground="yellow",font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       seasons_btn.place(x=190,y=163)
       
       toggle_button_colors=list((vegetables_btn,animal_btn,cereals_btn,seasons_btn))
@@ -652,7 +724,7 @@ def intro_win():
       beef_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # type: ignore
       beef_fr.place(x=40,y=20)
 
-      beef_label=Label(beef_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      beef_label=Label(beef_fr,background="yellow",text="Beef:\n40000BIF",foreground="green",font=("Times News Romans",9,"bold"))
       beef_label.pack(side="top",fill="both")
       
       beef_image=Label(beef_fr,image=beef_pic,width=128,height=85)
@@ -660,11 +732,28 @@ def intro_win():
 
       beef_button=Button(beef_fr,image=add_to_cart,height=30,background="yellow")
       beef_button.pack(fill="both")
+
+      def increment_beef(event):
+        global count_beef,beef_total_price
+        count_beef+=1
+        beef_total_price+=40000
+        beef_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_beef(event):
+        global count_beef,beef_total_price
+        count_beef-=1
+        beef_total_price-=40000
+        if count_beef <0 and beef_total_price<0:
+          count_beef=0
+          beef_total_price=0
+        beef_button.config(image=remove_from_cart,activebackground="red")
+      beef_button.bind("<Button-1>",increment_beef)
+      beef_button.bind("<Button-3>",decrement_beef)
       
       steak_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
       steak_fr.place(x=250,y=20)
       
-      steak_label=Label(steak_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      steak_label=Label(steak_fr,background="yellow",text="Steak:\n45000BIF",foreground="green",font=("Times News Romans",9,"bold"))
       steak_label.pack(side="top",fill="both")
       
       steak_image=Label(steak_fr,image=steak_pic,width=128,height=85)
@@ -672,11 +761,28 @@ def intro_win():
 
       steak_button=Button(steak_fr,image=add_to_cart,height=30,background="yellow")
       steak_button.pack(fill="both")
+
+      def increment_steak(event):
+        global count_steak,steak_total_price
+        count_steak+=1
+        steak_total_price+=45000
+        steak_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_steak(event):
+        global count_steak,steak_total_price
+        count_steak-=1
+        steak_total_price-=45000
+        if count_oats <0 and oats_total_price<0:
+          count_oats=0
+          steak_total_price=0
+        steak_button.config(image=remove_from_cart,activebackground="red")
+      steak_button.bind("<Button-1>",increment_steak)
+      steak_button.bind("<Button-3>",decrement_steak)
       
       chicken_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       chicken_fr.place(x=40,y=190)
 
-      chicken_label=Label(chicken_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      chicken_label=Label(chicken_fr,background="yellow",text="Chicken:\n50000BIF",foreground="green",font=("Times News Romans",9,"bold"))
       chicken_label.pack(side="top",fill="both")
       
       chicken_image=Label(chicken_fr,image=chicken_pic,width=128,height=85)
@@ -685,10 +791,27 @@ def intro_win():
       chicken_button=Button(chicken_fr,image=add_to_cart,height=30,background="yellow")
       chicken_button.pack(fill="both")
 
+      def increment_chicken(event):
+        global count_chicken,chicken_total_price
+        count_chicken+=1
+        chicken_total_price+=45000
+        chicken_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_chicken(event):
+        global count_chicken,chicken_total_price
+        count_chicken-=1
+        chicken_total_price-=45000
+        if count_chicken <0 and chicken_total_price<0:
+          count_chicken=0
+          chicken_total_price=0
+        chicken_button.config(image=remove_from_cart,activebackground="red")
+      chicken_button.bind("<Button-1>",increment_chicken)
+      chicken_button.bind("<Button-3>",decrement_chicken)
+
       pork_fr=Frame(animal_frame,width=135,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       pork_fr.place(x=250,y=190)
       
-      pork_label=Label(pork_fr,background="yellow",text="Tomatoes:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      pork_label=Label(pork_fr,background="yellow",text="Pork:\n60000BIF",foreground="green",font=("Times News Romans",9,"bold"))
       pork_label.pack(side="top",fill="both")
       
       pork_image=Label(pork_fr,image=pork_pic,width=128,height=85)
@@ -696,6 +819,34 @@ def intro_win():
 
       pork_button=Button(pork_fr,image=add_to_cart,height=30,background="yellow")
       pork_button.pack(fill="both")
+
+      def increment_pork(event):
+        global count_pork,pork_total_price
+        count_pork+=1
+        pork_total_price+=60000
+        pork_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_pork(event):
+        global count_pork,pork_total_price
+        count_pork-=1
+        pork_total_price-=60000
+        if count_pork <0 and pork_total_price<0:
+          count_pork=0
+          pork_total_price=0
+        pork_button.config(image=remove_from_cart,activebackground="red")
+      pork_button.bind("<Button-1>",increment_pork)
+      pork_button.bind("<Button-3>",decrement_pork)
+
+      if current_language=="English":
+          beef_label.config(text="Beef:\n40000BIF")
+          chicken_label.config(text="Chicken:\n50000BIF")
+          pork_label.config(text="Pork:\n60000BIF")
+          steak_label.config(text="Steak:\n45000BIF")
+      else:
+          beef_label.config(text="Boeuf:\n40000FBU")
+          chicken_label.config(text="Chicken:\n50000FBU")
+          pork_label.config(text="Pork:\n60000FBU")
+          steak_label.config(text="Steak:\n45000FBU")
       
       done_btn = Button(Animal_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
                           relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
@@ -742,7 +893,21 @@ def intro_win():
 
       tomatoes_button=Button(tomato_fr,image=add_to_cart,height=30,background="yellow")
       tomatoes_button.pack(fill="both")
-
+      def increment_tomatoes(event):
+          global count_tomatoes,tomato_total_price
+          count_tomatoes+=1
+          tomato_total_price+=6000
+          tomatoes_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+      def decrement_tomatoes(event):
+        global count_tomatoes,tomato_total_price
+        count_tomatoes-=1
+        tomato_total_price-=6000
+        if count_tomatoes <0 and tomato_total_price<0:
+          count_tomatoes=0
+          tomato_total_price=0
+        tomatoes_button.config(image=remove_from_cart,activebackground="red")
+      tomatoes_button.bind("<Button-1>",increment_tomatoes)
+      tomatoes_button.bind("<Button-3>",decrement_tomatoes)
       onion_fr=Frame(animal_frame1,width=135,height=135,background="yellow")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
       onion_fr.place(x=250,y=20)
 
@@ -754,23 +919,57 @@ def intro_win():
 
       onions_button=Button(onion_fr,image=add_to_cart,height=30,background="yellow")
       onions_button.pack(fill="both")
+      def increment_onions(event):
+          global count_onions,onion_total_price
+          count_onions+=1
+          onion_total_price+=5800
+          onions_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+      def decrement_onions(event):
+        global count_onions,onion_total_price
+        count_onions-=1
+        onion_total_price-=58000
+        if count_onions <0 and onion_total_price<0:
+          count_onions=0
+          onion_total_price=0
+        onions_button.config(image=remove_from_cart,activebackground="red")
+      onions_button.bind("<Button-1>",increment_onions)
+      onions_button.bind("<Button-3>",decrement_onions)
 
       carrot_fr=Frame(animal_frame1,width=135,height=130,background="#005E05")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       carrot_fr.place(x=40,y=190)
 
-      carrot_label=Label(carrot_fr,background="yellow",text="carrots:\n4200BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      carrot_label=Label(carrot_fr,background="yellow",text="Carrots:\n4200BIF",foreground="green",font=("Times News Romans",9,"bold"))
       carrot_label.pack(side="top",fill="both")
       
       carrot_image=Label(carrot_fr,image=carrot_pic,width=128,height=85)
       carrot_image.pack()
 
-      carrot_button=Button(carrot_fr,image=add_to_cart,height=30,background="yellow")
+      carrot_button=Button(carrot_fr,image=add_to_cart,activebackground="yellow",height=30,background="yellow")
       carrot_button.pack(fill="both")
 
+      def increment_carrot(event):
+        global count_carrot,carrot_total_price
+        count_carrot+=1
+        carrot_total_price+=4200
+        carrot_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_carrot(event):
+        global count_carrot,carrot_total_price
+        count_carrot-=1
+        carrot_total_price-=4200
+        if count_carrot <0 and carrot_total_price<0:
+          count_carrot=0
+          carrot_total_price=0
+        carrot_button.config(image=remove_from_cart,activebackground="red")
+        print(carrot_total_price,count_carrot)
+      carrot_button.bind("<Button-1>",increment_carrot)
+      carrot_button.bind("<Button-3>",decrement_carrot)
+      
+      
       cabbage_fr=Frame(animal_frame1,width=135,height=130,background="#005E05")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       cabbage_fr.place(x=250,y=190)
 
-      cabbage_label=Label(cabbage_fr,background="yellow",text="carrots:\n6000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      cabbage_label=Label(cabbage_fr,background="yellow",text="Cabbage:\n6500BIF",foreground="green",font=("Times News Romans",9,"bold"))
       cabbage_label.pack(side="top",fill="both")
       
       cabbage_image=Label(cabbage_fr,image=cabbage_pic,width=128,height=85)
@@ -778,7 +977,33 @@ def intro_win():
 
       cabbage_button=Button(cabbage_fr,image=add_to_cart,height=30,background="yellow")
       cabbage_button.pack(fill="both")
+      
+      if current_language=="English":
+          tomatoes_label.config(text="Tomatoes:\n6000BIF")
+          cabbage_label.config(text="Cabbage:\n6500BIF")
+          onions_label.config(text="Onions:\n5800BIF")
+          carrot_label.config(text="Carrots:\n4200BIF")
+      else:
+          tomatoes_label.config(text="Tomates:\n10000FBU")
+          cabbage_label.config(text="Chou:\n6500FBU")
+          onions_label.config(text="Onions:\n5800FBU")
+          carrot_label.config(text="Carrotes:\n4200FBU")
 
+      def increment_cabbage(event):
+          global count_cabbage,cabbage_total_price
+          count_cabbage+=1
+          cabbage_total_price+=6500
+          cabbage_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+      def decrement_cabbage(event):
+        global count_cabbage,cabbage_total_price
+        count_cabbage-=1
+        cabbage_total_price-=6500
+        if count_cabbage <0 and cabbage_total_price<0:
+          count_cabbage=0
+          cabbage_total_price=0
+        cabbage_button.config(image=remove_from_cart,activebackground="red")
+      cabbage_button.bind("<Button-1>",increment_cabbage)
+      cabbage_button.bind("<Button-3>",decrement_cabbage)
       
       done_btn1= Button(Veg_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
                           relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
@@ -789,7 +1014,7 @@ def intro_win():
       pur_win.withdraw()
       Cer_win=Toplevel(pur_win)
       Cer_win.geometry("710x600+450+90")
-      Cer_win_backg=Label(Cer_win,image=animal_backgr)
+      Cer_win_backg=Label(Cer_win,image=intro_backgr)
       Cer_win_backg.place(x=0,y=10,relwidth=1,relheight=1)
 
       def back_purchase_win():
@@ -808,27 +1033,299 @@ def intro_win():
       animal_products=["Beef","Steak","Chicken","Fish","Pork"]
       Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
       
-      animal_frame1=Frame(Cer_win,width=455,height=350)
+      animal_frame1=Frame(Cer_win,width=455,height=390)
       animal_frame1.pack(pady=35)
 
-      animal_back_pic=Label(animal_frame1,image=frame_animal_backgr)
+      animal_back_pic=Label(animal_frame1,image=Cer_win_backg)
       animal_back_pic.place(x=0,y=0,relheight=1,relwidth=1)
       
       Rice_fr=Frame(animal_frame1,width=145,height=130,background="#025E56")#,activebackground="green",activeforeground="yellow") # type: ignore
       Rice_fr.place(x=40,y=20)
+          
+      rice_label=Label(Rice_fr,background="yellow",text="Rice:\n10000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      rice_label.pack(side="top",fill="both")
+      
+      rice_image=Label(Rice_fr,image=rice_backgr,width=128,height=85)
+      rice_image.pack()
+
+      Rice_button=Button(Rice_fr,image=add_to_cart,height=30,background="yellow")
+      Rice_button.pack(fill="both")
+
+      def increment_rice(event):
+        global count_rice,count_total_rice
+        count_rice+=1
+        count_total_rice+=10000
+        Rice_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_rice(event):
+        global count_rice,count_total_rice
+        count_rice-=1
+        count_total_rice-=10000
+        if count_rice <0 and count_total_rice<0:
+          count_rice=0
+          count_total_rice=0
+        Rice_button.config(image=remove_from_cart,activebackground="red")
+      Rice_button.bind("<Button-1>",increment_rice)
+      Rice_button.bind("<Button-3>",decrement_rice)
       
       Maize_fr=Frame(animal_frame1,width=145,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
       Maize_fr.place(x=250,y=20)
+
+      maize_label=Label(Maize_fr,background="yellow",text="Maize:\n3000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      maize_label.pack(side="top",fill="both")
       
-      avoine_fr=Frame(animal_frame1,width=145,height=130,background="#5E4D00")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      maize_image=Label(Maize_fr,image=maize_backgr,width=128,height=85)
+      maize_image.pack()
+
+      maize_button=Button(Maize_fr,image=add_to_cart,height=30,background="yellow")
+      maize_button.pack(fill="both")
+      
+      def increment_maize(event):
+        global count_maize,maize_total_price
+        count_maize+=1
+        maize_total_price+=3000
+        maize_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_maize(event):
+        global count_maize,maize_total_price
+        count_maize-=1
+        maize_total_price-=3000
+        if count_maize <0 and maize_total_price<0:
+          count_maize=0
+          maize_total_price=0
+        maize_button.config(image=remove_from_cart,activebackground="red")
+      maize_button.bind("<Button-1>",increment_maize)
+      maize_button.bind("<Button-3>",decrement_maize)
+      avoine_fr=Frame(animal_frame1,width=145,height=140,background="#5E4D00")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       avoine_fr.place(x=40,y=190)
+
+      avoine_label=Label(avoine_fr,background="yellow",text="Oats:\n12000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      avoine_label.pack(side="top",fill="both")
+      
+      avoine_image=Label(avoine_fr,image=oats_backgr,width=128,height=85)
+      avoine_image.pack()
+
+      avoine_button=Button(avoine_fr,image=add_to_cart,height=30,background="yellow")
+      avoine_button.pack(fill="both")
+      def increment_oats(event):
+        global count_oats,oats_total_price
+        count_oats+=1
+        oats_total_price+=12000
+        avoine_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_oats(event):
+        global count_oats,oats_total_price
+        count_oatse-=1
+        oats_total_price-=12000
+        if count_oats <0 and oats_total_price<0:
+          count_oats=0
+          oats_total_price=0
+        avoine_button.config(image=remove_from_cart,activebackground="red")
+      avoine_button.bind("<Button-1>",increment_oats)
+      avoine_button.bind("<Button-3>",decrement_oats)
 
       sorgho_fr=Frame(animal_frame1,width=145,height=130,background="#19005E")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
       sorgho_fr.place(x=250,y=190)
+
+      sorghum_label=Label(sorgho_fr,background="yellow",text="Sorghum:\n8500BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      sorghum_label.pack(side="top",fill="both")
+      
+      sorghum_image=Label(sorgho_fr,image=sorghum_backgr,width=128,height=85)
+      sorghum_image.pack()
+
+      sorghum_button=Button(sorgho_fr,image=add_to_cart,height=30,background="yellow")
+      sorghum_button.pack(fill="both")
+
+      def increment_sorghum(event):
+        global count_sorghum,sorghum_total_price
+        count_sorghum+=1
+        sorghum_total_price+=8500
+        sorghum_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_sorghum(event):
+        global count_sorghum,sorghum_total_price
+        count_sorghum-=1
+        sorghum_total_price-=8500
+        if count_sorghum <0 and sorghum_total_price<0:
+          count_sorghum=0
+          sorghum_total_price=0
+        sorghum_button.config(image=remove_from_cart,activebackground="red")
+      sorghum_button.bind("<Button-1>",increment_sorghum)
+      sorghum_button.bind("<Button-3>",decrement_sorghum)
+
+      if current_language=="English":
+          rice_label.config(text="Rice:\n10000FBU")
+          maize_label.config(text="Maize:\n3000BIF")
+          sorghum_label.config(text="Sorghum:\n8500BIF")
+          avoine_label.config(text="Oats:\n12000BIF")
+      else:
+          rice_label.config(text="Riz:\n10000BIF")
+          maize_label.config(text="Mais:\n3000BIF")
+          sorghum_label.config(text="Sorgho:\n8500BIF")
+          avoine_label.config(text="Avoine:\n12000BIF")
       
       done_btn1= Button(Cer_win, text=f"DONE", bg="#FFD400", font=("Segoe UI Black", 12), fg="#2A6000", width=15,
                           relief="raised",state="disabled", borderwidth=7,activeforeground="#FFD400",activebackground="#2A6000",command=toggle_hist)
       done_btn1.place(relx=1,rely=1,anchor="se",x=-10,y=-16) 
+    def seasons_win():
+      global R,BTN,veg_btn,an_btn,cereal_btn,season_btn,fruit_btn,drink_btn,pur_win
+      click_sound()
+      pur_win.withdraw()
+      season_win=Toplevel(pur_win)
+      season_win.geometry("710x600+450+90")
+      season_win_backg=Label(season_win,image=intro_backgr)
+      season_win_backg.place(x=0,y=10,relwidth=1,relheight=1)
+
+      def back_purchase_win():
+        click_sound()
+        season_win.withdraw()
+        pur_win.deiconify()
+      canva_about2=Canvas(season_win,bg="#FFF902",height=70)
+      canva_about2.pack(fill="both",side="top")
+      canva_about2.create_image(340, 38, image=Logo2)
+      left_arrow_back=Button(canva_about2,font=("Segoe UI Black", 8),anchor="center",image=Left_Arrow,bg="#FFF902",command=back_purchase_win)
+      left_arrow_back.place(relheight=1,relwidth=1)
+      canva_about2.create_window((48,35),window=left_arrow_back,width=50,height=50)
+        
+      Vegetables=["Tomatoes","Onions","Carrots","Cabbage","Spinach"]
+      Cereals=["Rice","Maize flour","Sorghum","Pasta","Oats"]
+      animal_products=["Beef","Steak","Chicken","Fish","Pork"]
+      Seasonings=["Salt","Vinegar","Oil","Black pepper","Maggi","Curry powder"]
+
+      animal_frame1=Frame(season_win,width=455,height=390)
+      animal_frame1.pack(pady=35)
+
+      animal_back_pic=Label(animal_frame1,image=season_win_backg)
+      animal_back_pic.place(x=0,y=0,relheight=1,relwidth=1)
+      
+      salt_fr=Frame(animal_frame1,width=145,height=130,background="#025E56")#,activebackground="green",activeforeground="yellow") # type: ignore
+      salt_fr.place(x=40,y=20)
+
+       
+      salt_label=Label(salt_fr,background="yellow",text="Salt:\n9000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      salt_label.pack(side="top",fill="both")
+      
+      salt_image=Label(salt_fr,image=salt_backgr,width=128,height=85)
+      salt_image.pack()
+
+      salt_button=Button(salt_fr,image=add_to_cart,height=30,background="yellow")
+      salt_button.pack(fill="both")
+
+      def increment_salt(event):
+        global count_salt,salt_total_price
+        count_salt+=1
+        salt_total_price+=9000
+        salt_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_salt(event):
+        global count_salt,salt_total_price
+        count_salt-=1
+        salt_total_price-=9000
+        if count_salt <0 and salt_total_price<0:
+          count_salt=0
+          salt_total_price=0
+        salt_button.config(image=remove_from_cart,activebackground="red")
+      salt_button.bind("<Button-1>",increment_salt)
+      salt_button.bind("<Button-3>",decrement_salt)
+      
+      vinegar_fr=Frame(animal_frame1,width=145,height=130,background="#005E05")#,activebackground="green",activeforeground="yellow") # pyright: ignore[reportUndefinedVariable]
+      vinegar_fr.place(x=250,y=20)
+
+      vinegar_label=Label(vinegar_fr,background="yellow",text="Vinegar:\n11000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      vinegar_label.pack(side="top",fill="both")
+      
+      vinegar_image=Label(vinegar_fr,image=vinegar_backgr,width=128,height=85)
+      vinegar_image.pack()
+
+      def increment_vinegar(event):
+        global count_vinegar,vinegar_total_price
+        count_vinegar+=1
+        vinegar_total_price+=9000
+        vinegar_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_vinegar(event):
+        global count_vinegar,vinegar_total_price   
+        count_vinegar-=1
+        vinegar_total_price-=9000
+        if count_vinegar <0 and vinegar_total_price<0:
+          count_vinegar=0
+          vinegar_total_price=0
+        vinegar_button.config(image=remove_from_cart,activebackground="red")
+      vinegar_button.bind("<Button-1>",increment_vinegar)
+      vinegar_button.bind("<Button-3>",decrement_vinegar)
+
+      vinegar_button=Button(vinegar_fr,image=add_to_cart,height=30,background="yellow")
+      vinegar_button.pack(fill="both")
+
+      def increment_oil(event):
+        global count_oil,oil_total_price
+        count_oil+=1
+        oil_total_price+=10000
+        oil_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_oil(event):
+        global count_oil,oil_total_price
+        count_oil-=1
+        oil_total_price-=10000
+        if count_oil <0 and oil_total_price<0:
+          count_oil=0
+          oil_total_price=0
+        oil_button.config(image=remove_from_cart,activebackground="red")
+      oil_button.bind("<Button-1>",increment_oil)
+      oil_button.bind("<Button-3>",decrement_oil)
+
+      oil_fr=Frame(animal_frame1,width=145,height=140,background="#5E4D00")#,,compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      oil_fr.place(x=40,y=190)
+
+      oil_label=Label(oil_fr,background="yellow",text="Oil:\n15000BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      oil_label.pack(side="top",fill="both")
+      
+      oil_image=Label(oil_fr,image=oil_backgr,width=128,height=85)
+      oil_image.pack()
+
+      oil_button=Button(oil_fr,image=add_to_cart,height=30,background="yellow")
+      oil_button.pack(fill="both")
+
+      maggicubes_fr=Frame(animal_frame1,width=145,height=130,background="#19005E")#,font=("Impact",13),compound="top",activebackground="green",activeforeground="yellow") # type: ignore
+      maggicubes_fr.place(x=250,y=190)
+
+      maggicubes_label=Label(maggicubes_fr,background="yellow",text="Maggicubes:\n8500BIF",foreground="green",font=("Times News Romans",9,"bold"))
+      maggicubes_label.pack(side="top",fill="both")
+      
+      maggicubes_image=Label(maggicubes_fr,image=maggi_backgr,width=128,height=85)
+      maggicubes_image.pack()
+
+      maggi_button=Button(maggicubes_fr,image=add_to_cart,height=30,background="yellow")
+      maggi_button.pack(fill="both")
+      
+      def increment_maggi(event):
+        global count_maggi,maggi_total_price
+        count_maggi+=1
+        maggi_total_price+=10000
+        maggi_button.config(image=add_to_cart,activebackground="yellow",background="yellow")
+        print(carrot_total_price,count_carrot)
+      def decrement_maggi(event):
+        global count_maggi,maggi_total_price
+        count_maggi-=1
+        maggi_total_price-=10000
+        if count_maggi <0 and maggi_total_price<0:
+          count_maggi=0
+          maggi_total_price=0
+        maggi_button.config(image=remove_from_cart,activebackground="red")
+      maggi_button.bind("<Button-1>",increment_maggi)
+      maggi_button.bind("<Button-3>",decrement_maggi)
+
+      if current_language=="English":
+          salt_label.config(text="Salt:\n9000BIF")
+          maggicubes_label.config(text="Maggicubes:\n8500BIF")
+          vinegar_label.config(text="Vinegar:\n11000BIF")
+          oil_label.config(text="Oil:\n15000BIF")
+      else:
+          salt_label.config(text="Sel:\n9000BFBU")
+          maggicubes_label.config(text="Maggicubes:\n8500FBU")
+          vinegar_label.config(text="Vinaigre:\n11000FBU")
+          oil_label.config(text="Huile:\n15000FBU")
+      
     main_frame_im=Label(main_frame,image=main_frame_back)
     main_frame_im.place(x=0,y=0,relwidth=1,relheight=1)
     main_frame_lab=Label(main_frame,text=slogan,font=("Impact",10),borderwidth=9,width=65,bg="#FFD400",fg="#005E05")
